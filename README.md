@@ -2,8 +2,8 @@
 
 Tugas Besar TBFO - Python Compiler with Context Free Grammar
 
-Aditya PN 13520049
-Felicia Sutandijo 13520050
+Aditya PN 13520049\
+Felicia Sutandijo 13520050\
 Christopher Jeffrey 13520055
 
 [link to TBFO spec](https://docs.google.com/document/d/1Fd8wLOP_GzJ66atpw1yK1_S1dLCFQcKFTgnePFHql7Y/edit)
