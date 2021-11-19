@@ -1,0 +1,4 @@
+A -> a | BCD | e | epsilon;
+B -> b;
+C -> c;
+D -> d;

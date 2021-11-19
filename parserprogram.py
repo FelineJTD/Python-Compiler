@@ -1,4 +1,5 @@
 # PROGRAM UTAMA PARSER
+
 '''
 Alur umum dari program yang akan dibangun adalah sebagai berikut.
     1. Menerima input berupa file eksternal berisi string yang merupakan kode sebuah program python
@@ -24,3 +25,4 @@ with open(nama_file,"r") as f:
 
 '''2. Melakukan evaluasi sintaks dengan CFG'''
 
+# melakukan print jika terjadi kesalahan. implementasi dari Stack terjadi disini.
