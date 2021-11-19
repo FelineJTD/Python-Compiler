@@ -25,5 +25,5 @@ def CNFtoCNFdict():
             CNFdict[eachRightSide] = leftSide
     return CNFdict
 x = CNFtoCNFdict()
-print("hasil")
-print(x)
+# print("hasil")
+# print(x)
