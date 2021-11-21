@@ -1,3 +1,10 @@
-A -> a | BC;
-B -> b;
-C -> c;
+E -> EI | RG | a | TH;
+T -> RG | a | TH;
+F -> RG | a;
+G -> EO;
+H -> QF;
+I -> PT;
+Q -> *;
+R -> (;
+O -> );
+P -> +;

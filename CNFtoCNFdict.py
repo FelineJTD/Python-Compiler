@@ -22,8 +22,11 @@ def CNFtoCNFdict():
         for eachRightSide in listRightSide:
             # untuk menghilangkan spasi
             eachRightSide = eachRightSide.lstrip().rstrip()
-            CNFdict[eachRightSide] = leftSide
+            if eachRightSide in CNFdict:
+                CNFdict[eachRightSide].append(leftSide)
+            else:
+                CNFdict[eachRightSide] = [leftSide]
     return CNFdict
 x = CNFtoCNFdict()
-# print("hasil")
-# print(x)
+print("hasil")
+print(x)
