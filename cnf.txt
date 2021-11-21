@@ -1,6 +1,6 @@
-E -> EI | RG | a | TH;
-T -> RG | a | TH;
-F -> RG | a;
+E -> EI | RG | aa | TH;
+T -> RG | aa | TH;
+F -> RG | aa;
 G -> EO;
 H -> QF;
 I -> PT;

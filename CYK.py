@@ -27,10 +27,10 @@ def CYK(word, Rules):
                     l = l + 1
     return TabelCYK
 
-Rule = {'EI': 'E', 'RG': ['F', 'T', 'E'], 'a': ['F', 'T', 'E'], 'TH': ['T', 'E'], 'EO': 'G', 'QF': 'H', 'PT': 'I', '*': 'Q', '(': 'R', ')': 'O', '+': 'P'}
+Rule = CNFtoCNFdict()
 print(Rule)
 # print("a" in Rule.keys())
-tabel = CYK("a*(a+a)", Rule)
+tabel = CYK("aa*(aa+aa)", Rule)
 for row in tabel:
     print(row, end="\n")
 # for a in tabel[0][0]:

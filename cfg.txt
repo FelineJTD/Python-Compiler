@@ -1,4 +1,7 @@
-A -> a | B C D | e | epsilon;
-B -> b;
-C -> c;
-D -> d;
+S -> S S | IF S | IF S ELSE S | VARIABEL = VALUE | # string | TRIPLEQUOTE string TRIPLEQUOTE ;
+IF -> if CONDITION : ;
+ELSE -> else : ;
+VALUE -> MATH | string ;
+CONDITION -> ( VALUE == VALUE ) | VALUE == VALUE ;
+MATH -> angka | angka OPERATOR angka | ( angka ) ;
+OPERATOR -> + | - | * | / | mod ;
