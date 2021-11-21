@@ -10,7 +10,8 @@ def CYK(word, Rules):
     # Isi tabel diagonal dulu, disini i sebagai kolom dan j sebagai baris
     for i in range(n):
         # Kita append ke TabelCYK[i][i]
-        TabelCYK[i][i].update(Rules[word[i]])
+        if word[i] in Rules.keys():
+            TabelCYK[i][i].update(Rules[word[i]])
         # Kalo i > 0 baru cek pohon bawah nya
         if i > 0:
             # pasti di-iterate i kali, iterate mundur biar indexing lebih enak
