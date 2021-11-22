@@ -1,0 +1,13 @@
+q0,x,f
+number,letter,underscore
+q0
+f
+q0,number=x
+q0,letter=f
+q0,underscore=f
+f,number=f
+f,letter=f
+f,underscore=f
+x,number=x
+x,letter=x
+x,underscore=f
