@@ -1,9 +1,8 @@
 import re
 
-def tokenizer(txtfile):
+def tokenizer(texts):
     # buka dulu txtnya
-    f = open(txtfile, "r")
-    texts = f.read()
+    texts
     # buat dulu regex special case
     special_cases = [r'\=', r'\+', r'\-', r'\*', r'/', r'\%', '(', ')', '[', ']'
                      , '{', '}', r'\#', r'\>', r'\<', r'\>\=', r'\<\=', r'\=\=', r'\!\='
@@ -30,7 +29,7 @@ def tokenizer(txtfile):
     for token in tempToken:
         if token != "" or token != '':
             tokenized.append(token)
-
+    # print(tokenized)
     return tokenized
 
 

@@ -12,12 +12,14 @@ no 3 gk dilakuin karena in reality, ini juga gk pernah kebikin :v. kita bikin va
 
 
 '''
-untuk memudahkan, di cfg.txt, kalo ada nonterminal 2 biji di jejerin, kasi spasi dulu. harusnya gk ngerusak, dan memudahkan pengerjaan translate ke CFG. nti waktu udah jadi CFG, mau ditempel juga gamasalah
+- untuk memudahkan, di cfg.txt, kalo ada nonterminal 2 biji di jejerin, kasi spasi dulu. harusnya gk ngerusak, dan memudahkan pengerjaan translate ke CFG. nti waktu udah jadi CFG, mau ditempel juga gamasalah
+- jangan tulis enter dibagian akhir dari CFG
 
-SPECIAL SHIT. ini bakal ngaruh di CYK layer pertama
+- SPECIAL SHIT. ini bakal ngaruh di CYK layer pertama
 
 angka 
 string
+variabel
 
 '''
 from os import pipe
@@ -106,7 +108,10 @@ def CFGtoCNF():
     # buat catetan CFG yang tersedia sebagai dictionary. LeftSide sebagai key, right side sebagai value, dalam bentuk aray (of array hehe)
     dictCFG  = {}
     for element in listCFG:
-        leftSide, rightSide = element.split("->")
+        leftSide= element.split("->")[0]
+        # print(leftSide)
+        rightSide = element.split("->")[1]
+        # print(rightSide)
         leftSide = leftSide.lstrip().rstrip()
         # outputCNF += leftSide + " -> "
         # print(outputCNF)
@@ -134,8 +139,12 @@ def CFGtoCNF():
         outputCNF += "\n"
         outputCNF = removeBurden(burden,dictCFG,outputCNF)
     # print("====== hasil ======")
-    return outputCNF
+    # return outputCNF
     # print(burden)
+    # print(outputCNF)
+    outputCNF = outputCNF[0:-1]
+    fcyk = open("cnf.txt", "w")
+    fcyk.write(outputCNF)
 
 
 
@@ -176,6 +185,4 @@ def CFGtoCNF():
     #     outputCNF += ";\n"
     # print("=========== output CNF ============")
     # print(outputCNF)
-x = CFGtoCNF()
-print(x)
 

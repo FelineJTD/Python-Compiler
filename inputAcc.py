@@ -1,3 +1,6 @@
+if x == 3:
+    y = 3
+
 # file yang digunakan untuk testing. berisi kode python yang  valid
 
 def do_something(x):
