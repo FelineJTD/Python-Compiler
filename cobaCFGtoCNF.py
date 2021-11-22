@@ -21,9 +21,12 @@ MATH -> angka | angka OPERATOR angka | ( angka ) ;
 OPERATOR -> + | - | * | / | mod ;
 '''
 
+from os import path
+
+
 def readCFG(file):
-    # array terminal menyimpan semua terminal
-    terminals = []
+    # array nterminals menyimpan semua nonterminal
+    nterminals = []
 
     # open file, file disimpan di variable data
     with open(file, "r") as f:
@@ -32,11 +35,45 @@ def readCFG(file):
     data = data.split("\n")
     for i in range (len(data)):
         data[i] = data[i][0:-2]
-        print(data[i])
         data[i] = data[i].split(" -> ")
-        terminals.append(data[i][0])
+        nterminals.append(data[i][0])
+        data[i][1] = data[i][1].split(" | ")
+        for j in range (len(data[i][1])):
+            data[i][1][j] = data[i][1][j].split()
 
-    return (data, terminals)
+    # data yang di-return berbentuk array dalam array dalam array...
+    return (data, nterminals)
+
+def writeCNF(data, file):
+    with open(file, "w") as f:
+        for i in range(len(data)):
+            f.write(f"{data[i][0]} -> ")
+            for j in range(len(data[i][1])-1):
+                for k in range(len(data[i][1][j])):
+                    f.write(f"{data[i][1][j][k]} ")
+                f.write("| ")
+            for k in range(len(data[i][1][(len(data[i][1]))-1])):
+                f.write(f"{data[i][1][(len(data[i][1]))-1][k]} ")
+            f.write(";\n")
+
+def splitToTwos(subProduction, count):
+    # basis
+    if len(subProduction) == 1:
+        out = []
+        out.append([f"A{count}", [[subProduction[0]]]])
+        return out, count
+    elif len(subProduction) == 2:
+        out = []
+        out.append([f"A{count}", [[subProduction[0],subProduction[1]]]])
+        return out, count
+    # rekurens
+    else:
+        temp = ([f"A{count}", [[subProduction[0],f"A{count+1}"]]])
+        subProduction.pop(0)
+        count += 1
+        out, count = splitToTwos(subProduction, count)
+        out.append(temp)
+        return out, count
 
 def CFGtoCNF(filein, fileout):
     # dict base_nulls untuk menyimpan semua basis null production
@@ -48,80 +85,111 @@ def CFGtoCNF(filein, fileout):
     # counter untuk memberi nama terminal baru
     t_i = 1 # khusus terminal
     v_i = 1 # yang lainnya
-    # out untuk menampung isi txt
-    out = {}
+    # terminals untuk menampung isi txt
+    terminals = {}
     # read file
-    data, terminals = readCFG(filein)
+    data, nterminals = readCFG(filein)
     # proses
     for i in range (len(data)):
         lhs = data[i][0]
         rhs = data[i][1]
-        rhs = rhs.split(" | ")
         r = 0
-        for subProduction in rhs:
+        while (r<len(rhs)):
+            subProduction = rhs[r]
             # null production
-            if len(rhs) == 1 and subProduction=='e': # basis, production rule tersebut hanya berisi epsilon
+            if len(rhs) == 1 and subProduction==['e']: # basis, production rule tersebut hanya berisi epsilon
                 base_nulls[lhs] = True
-            elif 'e' in rhs: # ada epsilon di production rule tersebut
+            elif ['e'] in rhs: # ada epsilon di production rule tersebut
                 nulls[lhs] = True
+                data[i][1].remove(['e'])
 
-            subProductionTemp = subProduction.split()
-            s = 1
-            for each in subProductionTemp:
-                # nonterminals
+            for s in range (len(subProduction)):
+                x = subProduction[s]
+                # terminals
                 try:
-                    if (out[each] == True):
-                        each = data[i][1].replace(f" {each} ", f" {out[each][0]} ")
+                    if terminals[x] and len(subProduction)>1:
+                        data[i][1][r][s] = terminals[x][0]
                 except:
-                    if each not in terminals and each != ' e ' and each not in out.keys():
-                        out[each] = [f"T{t_i}"]
+                    if x not in nterminals and x != 'e':
+                        terminals[x] = [f"T{t_i}"]
+                        data.append([f"T{t_i}", [[x]]])
                         t_i += 1
-                        data[i][1] = data[i][1].replace(f" {each} ", f" {out[each][0]} ")
-                # di sini semua nonterminal sudah didata ke dict out dan yang memakainya sudah diganti dengan var bersangkutan
+                        if len(subProduction)>1:
+                            data[i][1][r][s] = terminals[x][0]
                 
-                each = each.split()
-                # unit production
-                if len(each) == 1:
-                    print('unit')
-                elif len(each) > 2:
-                    print('f')
+                # di sini semua terminal sudah didata ke dict terminals dan yang memakainya sudah diganti dengan var bersangkutan
                 
-                s += 1
+            if len(subProduction) > 2:
+                # split to twos
+                base = v_i
+                additions, v_i = splitToTwos(subProduction, v_i)
+                data[i][1][r] = [f"A{base}"]
+                for adds in additions:
+                    data.append(adds)
 
-            for each in subProductionTemp:
+            for s in range (len(subProduction)):
+                x = subProduction[s]
                 # handle epsilon production
-                if each in nulls:
-                    subProduction = subProduction.replace(f" {each} ", "")
-                    data[i][1] += f" | {subProduction}"
+                try:
+                    if nulls[x]:
+                        subProductionAdd = subProduction.pop(x)
+                        data[i][1].append(subProductionAdd)
+                except:
+                    pass
             
             r += 1
 
     # Output
-    for i in range (len(data)-1):
+    i = 0
+    while (i<len(data)):
         lhs = data[i][0]
         rhs = data[i][1]
-        rhs = rhs.split(" | ")
-        for subProduction in rhs:
-            temp = subProduction.split()
+        try:
+            # remove base nulls
+            if base_nulls[lhs]:
+                data.pop(i)
+                i -= 1
+        except:
+            pass
+        for r in range (len(rhs)):
+            subProduction = rhs[r]
+            # unit production
+            if len(subProduction) == 1:
+                print("")
             # handle epsilon productions
-            trash = False
-            for j in temp:
-                if j in base_nulls:
-                    trash = True
-                    break
-            
-            if not trash:
+            for s in range (len(subProduction)):
+                x = subProduction[s]
                 try:
-                    out[subProduction].append(lhs)
+                    if nulls[x]:
+                        temp = subProduction.copy()
+                        temp.pop(s)
+                        if temp != [lhs]:
+                            data[i][1].append(temp)
                 except:
-                    out[subProduction] = [lhs]
+                    pass
+
+            trash = False
+            for s in range (len(subProduction)):
+                x = subProduction[s]
+                try:
+                    if base_nulls[x]:
+                        trash = True
+                        break
+                except:
+                    pass
+            
+            if trash:
+                data[i][1].pop(r)
+            if data[i][1] == []:
+                data.pop(i)
+                i -= 1
+        i += 1
         
     print(data)
 
     print(base_nulls)
     print(nulls)
-    print(out)
+    print(terminals)
+    writeCNF(data, fileout)
 
-
-
-CFGtoCNF("cfg.txt", "")
+CFGtoCNF("try.txt", "hey.txt")
