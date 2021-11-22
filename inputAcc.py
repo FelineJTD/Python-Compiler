@@ -1,3 +1,7 @@
+
+else:
+    y = "Doodoo"
+
 # file yang digunakan untuk testing. berisi kode python yang  valid
 
 def do_something(x):

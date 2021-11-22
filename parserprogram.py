@@ -14,9 +14,10 @@ from CFGtoCNF import CFGtoCNF
 from CNFtoCNFdict import CNFtoCNFdict
 from CYK import CYK
 from FA import isVarValid
+from tokenizer import tokenizer
 
 # KAMUS
-listReservedNonTerminal = ['IF', 'ElSE']
+listReservedNonTerminal = ['IF', 'ELSE', 'ELIF', 'DEF']
 stack = []
 isValid = True
 # ALGORITMA
@@ -33,58 +34,79 @@ with open(nama_file,"r") as f:
 # melakukan print jika terjadi kesalahan. implementasi dari Stack terjadi disini.
 
 # siap kan CFG hingga menjadi CNFdict
-CFGtoCNF()
 print("translating CFG to CNF...")
-CNFdict = CNFtoCNFdict()
+CFGtoCNF()
+print("berhasil menulis di cnf.txt")    
 print("translating CNF to CNF dictionary...")
-
+CNFdict = CNFtoCNFdict()
+print("CNFdict")
+# for keys in CNFdict.keys():
+#     print(keys,":", CNFdict[keys])
+print("berhasil melakukan translasi menjadi CNFdict")
 listDataLine = data.split("\n")
+
 for eachListDataLine in listDataLine:
     # bersihkan tabulasi dan spasi
     eachListDataLine = eachListDataLine.lstrip().rstrip()
-    # print(eachListDataLine)
-    listTopCNF = CYK(eachListDataLine,CNFdict)
+    print("eachListDataLine")
+    print(eachListDataLine)
+    if(eachListDataLine != ""):
+        tokenizedLine = tokenizer(eachListDataLine)
+        listTopCNF = CYK(tokenizedLine,CNFdict)
 
-    # kalau di dalam listTopCNF itu gada S dan ada ReservedNonTerminal, brarti perlu tindakan khusus terhadap stack
-    isSpecial = False
-    adaS = False
-    specialNonTerminal = ''
-    for eachTopCNF in listTopCNF:
-        if eachTopCNF == 'S':
-            adaS = True
-        else:
-            for eachReservedNonTerminal in listReservedNonTerminal:
-                if eachTopCNF == eachReservedNonTerminal:
-                    specialNonTerminal = eachTopCNF
-                    isSpecial = True
-                    break
-        if isSpecial or adaS:
-            break
-    
-    if(isSpecial and not(adaS)):
-        # kalo nge append, yang aku append cuman yg special. ini bakal trouble kalo suatu statement bisa menjadi 2 spesial yang berbeda(misal dia IF statement sekaligus ELSE, tapi dia bukan S), tapi keknya gk mungkin. jadi harusnya aman 
-        if specialNonTerminal == 'IF':
-            stack.append(specialNonTerminal)
-        elif specialNonTerminal == 'ELSE':
-            if stack[-1] == 'IF': # stack[-1] artinya top of stack.
-                stack.pop()
+        # kalau di dalam listTopCNF itu gada S dan ada ReservedNonTerminal, brarti perlu tindakan khusus terhadap stack
+        isSpecial = False
+        adaS = False
+        specialNonTerminal = ''
+        print("listTopCNF")
+        print(listTopCNF)
+        for eachTopCNF in listTopCNF:
+            print("eachTopCNF")
+            print(eachTopCNF)
+            if eachTopCNF == 'S':
+                adaS = True
             else:
-                print("ada else tapi atasnya bukan if")
-                isValid = False
-        # if2 lainnya
-    elif(not(isSpecial) and not(adaS)): # berarti ada baris yang gk valid
-        isValid = False
-        print("ada baris yang tidak valid:")
-        print(eachListDataLine)
-    # kalo udah ada baris yang gk valid, gk usah cek bawah2nya
-    if not(isValid):
-        break
+                for eachReservedNonTerminal in listReservedNonTerminal:
+                    print("eachReservedNonTerminal")
+                    print(eachReservedNonTerminal)
+                    if eachTopCNF == eachReservedNonTerminal:
+                        print("eachTopCNF")
+                        print(eachTopCNF)
+                        specialNonTerminal = eachTopCNF
+                        isSpecial = True
+                        break
+            if isSpecial or adaS:
+                break
+        
+        if(isSpecial and not(adaS)):
+            # kalo nge append, yang aku append cuman yg special. ini bakal trouble kalo suatu statement bisa menjadi 2 spesial yang berbeda(misal dia IF statement sekaligus ELSE, tapi dia bukan S), tapi keknya gk mungkin. jadi harusnya aman 
+            print("specialNonTerminal")
+            print(specialNonTerminal)
+            if specialNonTerminal == 'IF':
+                stack.append(specialNonTerminal)
+            elif specialNonTerminal == 'ELSE':
+                print("stack")
+                print(stack)
+                if (len(stack) != 0 and stack[-1] == 'IF'): # stack[-1] artinya top of stack.
+                    stack.pop()
+                else:
+                    print("ada else tapi atasnya bukan if")
+                    isValid = False
+            # if2 lainnya
+        elif(not(isSpecial) and not(adaS)): # berarti ada baris yang gk valid
+            isValid = False
+            print("ada baris yang tidak valid:")
+            print(eachListDataLine)
+        # kalo udah ada baris yang gk valid, gk usah cek bawah2nya
+        if not(isValid):
+            break
 # checking tiap line selesai. 
 
 # bersihin stack, ada keyword yang gk perlu penutup (contoh IF)
 while stack:
     if stack[-1] == 'IF':
         stack.pop()
+    # if2 lainnya
     
 
 
