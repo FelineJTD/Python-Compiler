@@ -1,5 +1,6 @@
-if x == 3:
-    y = 3
+
+else:
+    y = "Doodoo"
 
 # file yang digunakan untuk testing. berisi kode python yang  valid
 

@@ -100,7 +100,7 @@ def addToOuputCNF(arr,dict, outputString,burden):
 # sebuah prosedur yang melakukan translasi CFG dari file cfg.txt menjadi CNF lalu meletakkannya di file cnf.txt.
 # tidak menerima input dan output
 def CFGtoCNF():
-    f = open("cfg.txt", "r")
+    f = open("cfgadit.txt", "r")
     stringCFG = f.read()
     listCFG = stringCFG.split("\n")
 

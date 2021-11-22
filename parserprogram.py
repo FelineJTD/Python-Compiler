@@ -17,7 +17,7 @@ from FA import isVarValid
 from tokenizer import tokenizer
 
 # KAMUS
-listReservedNonTerminal = ['IF', 'ElSE']
+listReservedNonTerminal = ['IF', 'ELSE', 'ELIF', 'DEF']
 stack = []
 isValid = True
 # ALGORITMA
@@ -58,12 +58,20 @@ for eachListDataLine in listDataLine:
         isSpecial = False
         adaS = False
         specialNonTerminal = ''
+        print("listTopCNF")
+        print(listTopCNF)
         for eachTopCNF in listTopCNF:
+            print("eachTopCNF")
+            print(eachTopCNF)
             if eachTopCNF == 'S':
                 adaS = True
             else:
                 for eachReservedNonTerminal in listReservedNonTerminal:
+                    print("eachReservedNonTerminal")
+                    print(eachReservedNonTerminal)
                     if eachTopCNF == eachReservedNonTerminal:
+                        print("eachTopCNF")
+                        print(eachTopCNF)
                         specialNonTerminal = eachTopCNF
                         isSpecial = True
                         break
@@ -72,10 +80,14 @@ for eachListDataLine in listDataLine:
         
         if(isSpecial and not(adaS)):
             # kalo nge append, yang aku append cuman yg special. ini bakal trouble kalo suatu statement bisa menjadi 2 spesial yang berbeda(misal dia IF statement sekaligus ELSE, tapi dia bukan S), tapi keknya gk mungkin. jadi harusnya aman 
+            print("specialNonTerminal")
+            print(specialNonTerminal)
             if specialNonTerminal == 'IF':
                 stack.append(specialNonTerminal)
             elif specialNonTerminal == 'ELSE':
-                if stack[-1] == 'IF': # stack[-1] artinya top of stack.
+                print("stack")
+                print(stack)
+                if (len(stack) != 0 and stack[-1] == 'IF'): # stack[-1] artinya top of stack.
                     stack.pop()
                 else:
                     print("ada else tapi atasnya bukan if")
@@ -94,6 +106,7 @@ for eachListDataLine in listDataLine:
 while stack:
     if stack[-1] == 'IF':
         stack.pop()
+    # if2 lainnya
     
 
 

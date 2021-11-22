@@ -1,6 +1,6 @@
 S -> S S | IF S | IF S ELSE S | variable = VALUE | COMMENT | FUNCTION ;
 COMMENT -> # STRING | ''' STRING ''' ;
-FUNCTION -> def STRING ;
+FUNCTION -> def variable ;
 IF -> if BOOLEAN : ;
 ELIF -> elif BOOLEAN : S | ELIF ELIF | e ;
 ELSE -> else : S | e ;
