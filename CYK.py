@@ -14,13 +14,13 @@ def isNumber(angka):
     return bool(matched)
 
 def CYK(word, Rules):
-    print("word dari tokenizer")
-    print(word)
+    # print("word dari tokenizer")
+    # print(word)
     # Dari referensi geeks for geeks
     # Untuk ukuran tabel CYK
     n = len(word)
-    print("n")
-    print(n)
+    # print("n")
+    # print(n)
     # Inisialisasi tabel CYK
     TabelCYK = [[set([]) for j in range(n)] for i in range(n)]
     # Isi tabel diagonal dulu, disini i sebagai kolom dan j sebagai baris
@@ -30,15 +30,15 @@ def CYK(word, Rules):
         # Kita append ke TabelCYK[i][i]
         if word[i] in Rules.keys():
             TabelCYK[i][i].update(Rules[word[i]])
-        else:
+        
             # print("word[i]")
             # print(word[i])
-            if(isString(word[i])):
-                TabelCYK[i][i].update(Rules['string'])
-            if(isNumber(word[i])):
-                TabelCYK[i][i].update(Rules['angka'])
-            if(isVarValid(word[i])):
-                TabelCYK[i][i].update(Rules['variable'])
+        if(isString(word[i])):
+            TabelCYK[i][i].update(Rules['string'])
+        if(isNumber(word[i])):
+            TabelCYK[i][i].update(Rules['angka'])
+        if(isVarValid(word[i])):
+            TabelCYK[i][i].update(Rules['variable'])
         # print(TabelCYK[i][i])
             
         # Kalo i > 0 baru cek pohon bawah nya
@@ -55,17 +55,17 @@ def CYK(word, Rules):
                             if NT + NT2 in Rules.keys():
                                 # print("hadir")
                                 if NT != "" and NT2 != "":
-                                    print('update', NT + NT2)
+                                    # print('update', NT + NT2)
                                     # print(Rules[NT + NT2])
                                     TabelCYK[j][i].update(Rules[NT + NT2])
                                     # print(TabelCYK[j][i])
                     l = l + 1
         # print("baris ke - ", i)
         # print(TabelCYK[i])
-    print("-=====================-")
-    for eachrow in TabelCYK:
-        print(eachrow)
-    print("n-1 = ",n-1)
+    # print("-=====================-")
+    # for eachrow in TabelCYK:
+    #     print(eachrow)
+    # print("n-1 = ",n-1)
     return TabelCYK[0][n-1]
 
 # Contoh pemakaian
