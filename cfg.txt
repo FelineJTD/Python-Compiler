@@ -1,7 +1,10 @@
-S -> S S | IF S | IF S ELSE S | VARIABEL = VALUE | # string | TRIPLEQUOTE string TRIPLEQUOTE ;
-IF -> if CONDITION : ;
+S -> S S | IF S | IF S ELSE S | var = VALUE | # string | TRIPLEQUOTE string TRIPLEQUOTE | FUNCTION ;
+FUNCTION -> def string ;
+IF -> if BOOLEAN : ;
 ELSE -> else : ;
-VALUE -> MATH | string ;
-CONDITION -> ( VALUE == VALUE ) | VALUE == VALUE ;
+VALUE -> ( VALUE ) | MATH | string ;
+BOOLEAN -> True | False | VARVAL EVALUATOR VARVAL | ( BOOLEAN ) | BOOLEAN or BOOLEAN | BOOLEAN and BOOLEAN | not BOOLEAN ;
+VARVAL -> var | VALUE ;
+EVALUATOR -> == | <= | < | > | >= | != ;
 MATH -> angka | angka OPERATOR angka | ( angka ) ;
 OPERATOR -> + | - | * | / | mod ;

@@ -13,6 +13,8 @@ import sys
 from CFGtoCNF import CFGtoCNF
 from CNFtoCNFdict import CNFtoCNFdict
 from CYK import CYK
+from FA import isVarValid
+
 # KAMUS
 listReservedNonTerminal = ['IF', 'ElSE']
 stack = []
@@ -93,5 +95,3 @@ if isValid:
         print("ada ", stack[-1], "tanpa penutup")
     else:
         print("yay valid")
-
-
