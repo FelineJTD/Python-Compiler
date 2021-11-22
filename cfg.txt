@@ -1,4 +1,4 @@
-S -> S S | IF | var = VALUE | COMMENT | FUNCTION | e ;
+S -> S S | IF | var = VALUE | COMMENT | FUNCTION ;
 COMMENT -> # string | ''' string ''' ;
 FUNCTION -> def string ;
 IF -> if BOOLEAN : S ELIF ELSE ;
@@ -10,3 +10,4 @@ VARVAL -> var | VALUE ;
 EVALUATOR -> == | <= | < | > | >= | != ;
 MATH -> angka | angka OPERATOR angka | ( angka ) ;
 OPERATOR -> + | - | * | / | mod ;
+HELLO -> e ;
