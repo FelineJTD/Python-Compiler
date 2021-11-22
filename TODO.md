@@ -1,6 +1,6 @@
 1. cfg.txt  
-[x] False  
-[] class  
+- [x] False  
+- [ ] class  
 [] is  
 [] return  
 [] None  
