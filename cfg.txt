@@ -5,3 +5,4 @@ VALUE -> MATH | string ;
 CONDITION -> ( VALUE == VALUE ) | VALUE == VALUE ;
 MATH -> angka | angka OPERATOR angka | ( angka ) ;
 OPERATOR -> + | - | * | / | mod ;
+TRIPLEQUOTE -> ''';
