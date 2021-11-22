@@ -9,6 +9,17 @@ ini gk ngecover no 1 sama no 3.
 no 1 gk dicapai karena blom kebayang gimana caranya hehe
 no 3 gk dilakuin karena in reality, ini juga gk pernah kebikin :v. kita bikin variabel ya variabel yang at some point bisa dicapai
 '''
+
+
+'''
+untuk memudahkan, di cfg.txt, kalo ada nonterminal 2 biji di jejerin, kasi spasi dulu. harusnya gk ngerusak, dan memudahkan pengerjaan translate ke CFG. nti waktu udah jadi CFG, mau ditempel juga gamasalah
+
+SPECIAL SHIT. ini bakal ngaruh di CYK layer pertama
+
+angka 
+string
+
+'''
 from os import pipe
 
 
