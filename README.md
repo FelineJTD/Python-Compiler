@@ -11,6 +11,8 @@ Christopher Jeffrey 13520055
 
 [link to TBFO spec](https://docs.google.com/document/d/1Fd8wLOP_GzJ66atpw1yK1_S1dLCFQcKFTgnePFHql7Y/edit)
 
+[link to QnA](https://docs.google.com/spreadsheets/d/1zS1X2ujRu2b7HnFarZREtPQzOabdTwnj3mFLt2WTuYg/edit#gid=0)
+
 ### urutan langkah algo
 1. bikin CFG
 2. bikin CNF
