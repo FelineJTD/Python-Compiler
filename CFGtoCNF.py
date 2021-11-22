@@ -31,6 +31,7 @@ def removeBurden(burdenDict,CFGdict,outputString):
             # print(burdenDict[eachBurdenKey])
             outputString, burdenDict = addToOuputCNF(burdenDict[eachKey],CFGdict,outputString,burdenDict)
             del burdenDict[eachKey]
+            outputString = outputString[0:-2] + ";"
             outputString += "\n"    
     return outputString
 # digunakan untuk menambahkan arr ke dalam output string. bisa melihat catatan dict. arr itu list of non terminal or terminal yang ada di sisi kanan CFG.
@@ -41,25 +42,25 @@ def addToOuputCNF(arr,dict, outputString,burden):
     
     # print(len(arr))
     if len(arr) == 1 and isNotTerminal(arr[0]):
-        print("kasus satu")
+        # print("kasus satu")
         for eachShit in dict[arr[0]]:
             # print("heres each shit", eachShit)
             outputString,burden = addToOuputCNF(eachShit,dict, outputString,burden)
     # kasus dua. hanya ada satu item, dan item tersebut terminal.
     elif len(arr) == 1 and not(isNotTerminal(arr[0])):
-        print("kasus dua")
+        # print("kasus dua")
         outputString += arr[0]
         outputString += " | "
     # kasus tiga. ada dua item, dan kedunya non terminal
     elif len(arr) == 2 and isNotTerminal(arr[0]) and isNotTerminal(arr[1]):
         # print(type(outputString))
-        print("kasus ketiga")
+        # print("kasus ketiga")
         outputString += arr[0]
         outputString += arr[1]
         outputString += " | "
     # kasus empat. artinya perlu membuat rule baru. barulah burden dipake
     else:
-        print("kasus empat")
+        # print("kasus empat")
         if isNotTerminal(arr[0]):
             outputString += arr[0]
             outputString += 'CNF'+ str(CNFVarCounter) + " | "
@@ -106,7 +107,7 @@ def CFGtoCNF():
     for leftSide in dictCFG:
         # print(leftSide)
         outputCNF += leftSide + " -> "
-        print("======================================")
+        # print("======================================")
         burden = {}
         for eachRightSide in dictCFG[leftSide]:
             # print(eachRightSide)
@@ -114,10 +115,12 @@ def CFGtoCNF():
             outputCNF,burden = addToOuputCNF(eachRightSide,dictCFG,outputCNF,burden)
             # print("burden")
             # print(burden)
+            
+        outputCNF = outputCNF[0:-2] + ";"
         outputCNF += "\n"
         outputCNF = removeBurden(burden,dictCFG,outputCNF)
-    print("====== hasil ======")
-    print(outputCNF)
+    # print("====== hasil ======")
+    return outputCNF
     # print(burden)
 
 
@@ -159,5 +162,6 @@ def CFGtoCNF():
     #     outputCNF += ";\n"
     # print("=========== output CNF ============")
     # print(outputCNF)
-CFGtoCNF()
+x = CFGtoCNF()
+print(x)
 
