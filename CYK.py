@@ -28,6 +28,7 @@ def CYK(word, Rules):
                     l = l + 1
     return TabelCYK
 
+# Contoh pemakaian
 Rule = CNFtoCNFdict()
 print(Rule)
 # print("a" in Rule.keys())
