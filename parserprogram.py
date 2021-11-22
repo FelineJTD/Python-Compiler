@@ -17,7 +17,7 @@ from FA import isVarValid
 from tokenizer import tokenizer
 
 # KAMUS
-listReservedNonTerminal = ['IF', 'ELSE', 'ELIF', 'DEF']
+listReservedNonTerminal = ['IF', 'ELSE', 'ELIF', 'DEF', 'CLASS', 'FOR', 'WHILE', 'BREAK', 'PASS', 'CONTINUE', 'RETURN', 'TRIPLEDOUBLEQUOTE', 'TRIPLESINGLEQUOTE']
 stack = []
 isValid = True
 # ALGORITMA
@@ -35,7 +35,7 @@ with open(nama_file,"r") as f:
 
 # siap kan CFG hingga menjadi CNFdict
 print("translating CFG to CNF...")
-CFGtoCNF()
+CFGtoCNF("cfgadit.txt")
 print("berhasil menulis di cnf.txt")    
 print("translating CNF to CNF dictionary...")
 CNFdict = CNFtoCNFdict()
@@ -48,11 +48,16 @@ listDataLine = data.split("\n")
 for eachListDataLine in listDataLine:
     # bersihkan tabulasi dan spasi
     eachListDataLine = eachListDataLine.lstrip().rstrip()
-    print("eachListDataLine")
-    print(eachListDataLine)
+    # print("eachListDataLine")
+    # print(eachListDataLine)
     if(eachListDataLine != ""):
         tokenizedLine = tokenizer(eachListDataLine)
+        # print(tokenizedLine)
         listTopCNF = CYK(tokenizedLine,CNFdict)
+        print("eachListDataLine")
+        print(eachListDataLine)
+        print("listTopCNF")
+        print(listTopCNF)
 
         # kalau di dalam listTopCNF itu gada S dan ada ReservedNonTerminal, brarti perlu tindakan khusus terhadap stack
         isSpecial = False
@@ -67,8 +72,8 @@ for eachListDataLine in listDataLine:
                 adaS = True
             else:
                 for eachReservedNonTerminal in listReservedNonTerminal:
-                    print("eachReservedNonTerminal")
-                    print(eachReservedNonTerminal)
+                    # print("eachReservedNonTerminal")
+                    # print(eachReservedNonTerminal)
                     if eachTopCNF == eachReservedNonTerminal:
                         print("eachTopCNF")
                         print(eachTopCNF)
@@ -92,7 +97,8 @@ for eachListDataLine in listDataLine:
                 else:
                     print("ada else tapi atasnya bukan if")
                     isValid = False
-            # if2 lainnya
+            elif specialNonTerminal == 'ELIF':
+                pass
         elif(not(isSpecial) and not(adaS)): # berarti ada baris yang gk valid
             isValid = False
             print("ada baris yang tidak valid:")
