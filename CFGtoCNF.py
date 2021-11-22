@@ -14,9 +14,12 @@ from os import pipe
 
 CNFVarCounter = 1
 # mengembalikan true jika X adalah terminal
-# terjadi ketika diawali huruf besar. karena tidak ada non terminal yang diawali huruf besar
+# terjadi ketika seluruh kata ditulis dengan huruf kapital
 def isNotTerminal(X):
-    return X[0] in "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for i in X:
+        if i not in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+            return False
+    return True
 
 # remove burden lol
 def removeBurden(burdenDict,CFGdict,outputString):

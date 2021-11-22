@@ -1,7 +1,9 @@
-S -> S S | IF S | IF S ELSE S | var = VALUE | # string | TRIPLEQUOTE string TRIPLEQUOTE | FUNCTION ;
+S -> S S | IF | var = VALUE | COMMENT | FUNCTION | e ;
+COMMENT -> # string | ''' string ''' ;
 FUNCTION -> def string ;
-IF -> if BOOLEAN : ;
-ELSE -> else : ;
+IF -> if BOOLEAN : S ELIF ELSE ;
+ELIF -> elif BOOLEAN : S | ELIF ELIF | e ;
+ELSE -> else : S | e ;
 VALUE -> ( VALUE ) | MATH | string ;
 BOOLEAN -> True | False | VARVAL EVALUATOR VARVAL | ( BOOLEAN ) | BOOLEAN or BOOLEAN | BOOLEAN and BOOLEAN | not BOOLEAN ;
 VARVAL -> var | VALUE ;
