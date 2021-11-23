@@ -61,7 +61,6 @@ print("CNFdict")
 print("berhasil melakukan translasi menjadi CNFdict")
 listDataLine = data.split("\n")
 baris = 0
-prevIsS = False
 mustFollowedByS = True
 for eachListDataLine in listDataLine:
     baris += 1
@@ -74,7 +73,6 @@ for eachListDataLine in listDataLine:
         print("===========================")
         print("BARIS ",baris)
         print('tokenized = ',tokenizedLine)
-        print('prev is S = ', prevIsS)
         listTopCNF = CYK(tokenizedLine,CNFdict)
 
         # kalau di dalam listTopCNF itu gada S dan ada ReservedNonTerminal, brarti perlu tindakan khusus dengan stack
@@ -135,51 +133,51 @@ for eachListDataLine in listDataLine:
                 else:
                     # print("ada else tapi atasnya bukan if")
                     isValid = False
-                prevIsS = False
+               
             elif specialNonTerminal == 'ELIF':
                 if mustFollowedByS:
                     isValid = False
                 if not(len(stack) != 0 and stack[-1][0] == 'IF'): # stack[-1][0] artinya top of stack.
                     print("ada elif tanpa if")
                     isValid = False
-                prevIsS = False
+              
             elif specialNonTerminal == 'DEF':
                 mustFollowedByS = True
                 stack.append((specialNonTerminal,baris))
-                prevIsS = False
+               
             elif specialNonTerminal == 'CLASS':
                 mustFollowedByS = True
                 stack.append((specialNonTerminal,baris))
-                prevIsS = False
+                
             elif specialNonTerminal == 'FOR':
                 mustFollowedByS = True
                 stack.append((specialNonTerminal,baris))
-                prevIsS = False
+               
             elif specialNonTerminal == 'WHILE':
                 mustFollowedByS = True
                 stack.append((specialNonTerminal,baris))
-                prevIsS = False
+              
             elif specialNonTerminal == 'BREAK':
                 mustFollowedByS = False
-                prevIsS = True
+               
                 if (len(stack) != 0 and (stack[-1][0] == 'FOR' or stack[-1][0] == 'WHILE')):
                     stack.pop()
                 else:
                     isValid = False
             elif specialNonTerminal == 'PASS':
                 mustFollowedByS = False
-                prevIsS = True
+                
                 if (len(stack) != 0 and (stack[-1][0] == 'FOR' or stack[-1][0] == 'WHILE')):
                     stack.pop()
                 else:
                     isValid = False
             elif specialNonTerminal == 'CONTINUE':
                 mustFollowedByS = False
-                prevIsS = True
-                pass
+                
+               
             elif specialNonTerminal == 'RETURN':
                 mustFollowedByS = False
-                prevIsS = True
+               
                 # cari def
                 exist = False
                 for element in stack:
@@ -222,31 +220,35 @@ if not(isValid):
     print("\n!!!!! NOT VALID !!!!!\n")
     print("baris yang dicurigai")
     print(eachListDataLine)
-print("KONDISI STACK")
-print(stack)
-# bersihin stack, ada keyword yang gk perlu penutup (contoh IF)
-while stack:
-    prevStack = stack
-    if stack[-1][0] == 'IF' and prevIsS:
-        stack.pop()
-    elif stack[-1][0] == 'DEF' and prevIsS:
-        stack.pop()
-    elif stack[-1][0] == 'FOR' and prevIsS:
-        stack.pop()
-    elif stack[-1][0] == 'WHILE' and prevIsS:
-        stack.pop()
-    # kalau sudah gada perubahan di stack
-    if prevStack == stack: 
-        break
-    # if2 lainnya
+    print("KONDISI STACK")
+    for element in stack:
+        print("{} (baris {})".format(element[0], element[1]))
     
 
 # Stack harus kosong. kalau gk kosong berarti gk valid
-if isValid:
-    print("KONDISI STACK STELAH DIBERSIHKAN")
-    print(stack)
-    if stack: # jika semua line aman, tapi stack masih ada isinya
-        print("stack tidak kosong.")
-        print("ada ", stack[-1][0], "tanpa penutup")
+elif isValid:
+    if mustFollowedByS:
+        print("kurang statement dibagian akhir")
     else:
-        print("\n!!!!! yay valid !!!!!!\n")
+        # bersihin stack, ada keyword yang gk perlu penutup (contoh IF)
+        while stack:
+            prevStack = stack
+            if stack[-1][0] == 'IF' and not(mustFollowedByS):
+                stack.pop()
+            elif stack[-1][0] == 'DEF' and not(mustFollowedByS):
+                stack.pop()
+            elif stack[-1][0] == 'FOR' and not(mustFollowedByS):
+                stack.pop()
+            elif stack[-1][0] == 'WHILE' and not(mustFollowedByS):
+                stack.pop()
+            # kalau sudah gada perubahan di stack
+            if prevStack == stack: 
+                break
+            # if2 lainnya
+        print("KONDISI STACK STELAH DIBERSIHKAN")
+        print(stack)
+        if stack: # jika semua line aman, tapi stack masih ada isinya
+            print("stack tidak kosong.")
+            print("ada ", stack[-1][0], "tanpa penutup")
+        else:
+            print("\n!!!!! yay valid !!!!!!\n")
