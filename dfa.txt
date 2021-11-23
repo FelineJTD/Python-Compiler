@@ -10,4 +10,4 @@ f,letter=f
 f,underscore=f
 x,number=x
 x,letter=x
-x,underscore=f
+x,underscore=x
