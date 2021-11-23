@@ -10,9 +10,6 @@ def CNFtoCNFdict():
     f = open("cnf.txt", "r")
     stringCNF = f.read()
     listCNF = stringCNF.split("\n")
-    # print('awal')
-    # print(stringCNF)
-    # print(listCNF)
     for element in listCNF:
         leftSide,rightSide = element.split("->")
         # untuk menghilangkan spasi
@@ -27,6 +24,3 @@ def CNFtoCNFdict():
             else:
                 CNFdict[eachRightSide] = [leftSide]
     return CNFdict
-# x = CNFtoCNFdict()
-# print("hasil")
-# print(x)
