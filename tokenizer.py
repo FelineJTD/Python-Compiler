@@ -3,9 +3,9 @@ import re
 def tokenizer(texts):
     # buka dulu txtnya
     # buat dulu regex special case
-    special_cases = [r'\=', r'\+', r'\-', r'\*', r'/', r'\%', '(', ')', '[', ']'
-                     , '{', '}', r'\#', r'\>', r'\<', r'\>\=', r'\<\=', r'\=\=', r'\!\='
-                     , r'\`\`\`', ':', '\n', '"',",",".", r'\*\*',"'","#", "=="]
+    special_cases = ['=', '+', '-', '*', '/', r'\%', '(', ')', '[', ']'
+                     , '{', '}', '#', '>', '<', r'\>\=', r'\<\=', r'\=\=', r'\!\='
+                     , r'\`\`\`', ':', '\n', '"', ",", ".", r'\*\*', "'", "=="]
     # Buat spasi dan tempWord
     spasi = " "
     tempWord = ""
@@ -17,7 +17,8 @@ def tokenizer(texts):
             tempWord += texts[i]
         # Cek klo setelah ini spasi atau dia ada di spesial case, klo iya, berarti dia udah satu kata dan diappend
         if i + 1 < len(texts):
-            if (texts[i + 1] in special_cases or texts[i + 1] == spasi or tempWord in special_cases):
+            if ((texts[i] + texts[i + 1]) in special_cases or texts[i + 1] in special_cases or
+                    texts[i + 1] == spasi or tempWord in special_cases):
                 tokenized.append(tempWord)
                 tempWord = ""
     tokenized.append(tempWord) # buat append sisa terakhir
@@ -32,4 +33,4 @@ def tokenizer(texts):
     return tokenized
 
 
-# print(tokenizer("input.txt"))
+print(tokenizer("if x+3<=5:"))
