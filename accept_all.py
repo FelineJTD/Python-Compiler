@@ -17,11 +17,14 @@ hello()
 def read(x):
     with open(x, "r") as f:
         data = "hello"
+    if x == 3:
+        return data
+    elif x == 1:
+        return data
     return data
-
 class ExampleClass:
     def function1(parameters):
-        pass
+        continue
     def function2(parameters):
         print(parameters)
 
