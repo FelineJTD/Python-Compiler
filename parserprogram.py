@@ -190,25 +190,29 @@ if not(isValid):
     print("\n!!!!! NOT VALID !!!!!\n")
     print("baris yang dicurigai")
     print(eachListDataLine)
-print("KONDISI STACK DIAKHIR PROGRAM")
+print("KONDISI STACK")
 print(stack)
 # bersihin stack, ada keyword yang gk perlu penutup (contoh IF)
 while stack:
     prevStack = stack
-    if stack[-1] == 'IF':
+    if stack[-1] == 'IF' and prevIsS:
         stack.pop()
-    if stack[-1] == 'DEF':
+    if stack[-1] == 'DEF' and prevIsS:
+        stack.pop()
+    if stack[-1] == 'FOR' and prevIsS:
+        stack.pop()
+    if stack[-1] == 'WHILE' and prevIsS:
         stack.pop()
     # kalau sudah gada perubahan di stack
     if prevStack == stack: 
         break
     # if2 lainnya
     
-print("KONDISI STACK STELAH DIBERSIHKAN")
-print(stack)
 
 # Stack harus kosong. kalau gk kosong berarti gk valid
 if isValid:
+    print("KONDISI STACK STELAH DIBERSIHKAN")
+    print(stack)
     if stack: # jika semua line aman, tapi stack masih ada isinya
         print("stack tidak kosong.")
         print("ada ", stack[-1], "tanpa penutup")
