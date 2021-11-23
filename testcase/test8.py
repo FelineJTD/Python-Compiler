@@ -1,0 +1,4 @@
+
+
+def lupadikasikurung:
+    print(x)

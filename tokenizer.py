@@ -31,6 +31,3 @@ def tokenizer(texts):
             tokenized.append(token)
     # print(tokenized)
     return tokenized
-
-
-print(tokenizer("if x+3<=5:"))

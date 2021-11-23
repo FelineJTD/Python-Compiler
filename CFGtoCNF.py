@@ -108,6 +108,7 @@ def CFGtoCNF(filename):
     # buat catetan CFG yang tersedia sebagai dictionary. LeftSide sebagai key, right side sebagai value, dalam bentuk aray (of array hehe)
     dictCFG  = {}
     for element in listCFG:
+        
         leftSide= element.split("->")[0]
         # print(leftSide)
         rightSide = element.split("->")[1]

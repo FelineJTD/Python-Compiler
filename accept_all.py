@@ -24,7 +24,7 @@ def read(x):
     return data
 class ExampleClass:
     def function1(parameters):
-        continue
+        pass
     def function2(parameters):
         print(parameters)
 
@@ -33,6 +33,7 @@ class ExPass:
 
 while True:
     num = 1
+    second = None
     if num == 0:
         raise ZeroDivisionError('cannot divide')
     Var1 = True

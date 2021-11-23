@@ -1,6 +1,4 @@
 # file yang digunakan untuk testing. berisi kode python yang tidak valid
-if x == 1:
-else:
 
 def do_something(x):
     ''' 
