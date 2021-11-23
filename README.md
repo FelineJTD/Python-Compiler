@@ -17,6 +17,7 @@ Tugas Besar TBFO - Python Compiler with Context Free Grammar
 5. `CNFtoCNFdict.py` &rarr; Berisi fungsi yang mengonversi `cnf.txt` ke dalam bentuk dict
 6. `CYK.py` &rarr; Berisi fungsi yang menggunakan algoritma CYK untuk mengetes <em>membership</em>
 7. `FA.py` &rarr; Berisi fungsi yang mengetes validasi penamaan variabel
+8. `tokenizer.py` &rarr; Berisi fungsi yang mengubah input menjadi token
 
 ## Cara Menjalankan Program
 `python3 parserprogram.py nama_file`
