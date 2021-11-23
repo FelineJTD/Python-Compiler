@@ -2,7 +2,6 @@ import re
 
 def tokenizer(texts):
     # buka dulu txtnya
-    texts
     # buat dulu regex special case
     special_cases = [r'\=', r'\+', r'\-', r'\*', r'/', r'\%', '(', ')', '[', ']'
                      , '{', '}', r'\#', r'\>', r'\<', r'\>\=', r'\<\=', r'\=\=', r'\!\='

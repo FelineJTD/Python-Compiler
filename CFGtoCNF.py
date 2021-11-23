@@ -99,8 +99,8 @@ def addToOuputCNF(arr,dict, outputString,burden):
 
 # sebuah prosedur yang melakukan translasi CFG dari file cfg.txt menjadi CNF lalu meletakkannya di file cnf.txt.
 # tidak menerima input dan output
-def CFGtoCNF():
-    f = open("cfgadit.txt", "r")
+def CFGtoCNF(filename):
+    f = open(filename, "r")
     stringCFG = f.read()
     listCFG = stringCFG.split("\n")
 
@@ -145,44 +145,3 @@ def CFGtoCNF():
     outputCNF = outputCNF[0:-1]
     fcyk = open("cnf.txt", "w")
     fcyk.write(outputCNF)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # for element in listCFG:
-    #     leftSide, rightSide = element.split("->")
-    #     leftSide = leftSide.lstrip().rstrip()
-    #     outputCNF += leftSide + " -> "
-    #     print(outputCNF)
-    #     listRightSide = rightSide.split(";")[0].split("|")
-    #     for eachRightSide in listRightSide:
-    #         # untuk menghilangkan spasi di kiri dan kanan
-    #         eachRightSide = eachRightSide.lstrip().rstrip()
-    #         listEachRightSide = eachRightSide.split()
-    #         print(listEachRightSide)
-    #         # sekarang tiap sisi kanan sudah dipisah menjadi masing2 terminal atau non terminal.
-    #         # sekarang waktunya membuat CNF.
-    #         # kasus satu. hanya ada satu item, dan item tersebut non terminal aka variabel.
-    #         # if len(listEachRightSide) == 1 and not(isTerminal(listEachRightSide[0])):
-                
-    #         # kasus dua. hanya ada satu item, dan item tersebut terminal.
-    #         if len(listEachRightSide) == 1 and isTerminal(listEachRightSide[0]):
-    #             outputCNF += listEachRightSide[0]
-    #             outputCNF += " | "
-                
-    #         # kasus tiga. keknya yang ini pake while loop deh.
-    #     outputCNF += ";\n"
-    # print("=========== output CNF ============")
-    # print(outputCNF)
-

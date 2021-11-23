@@ -20,7 +20,7 @@ regex = '^[0-9]+$'
 # Define a function for
 # identifying a Digit
 def check(string):
- 
+    
      # pass the regular expression
      # and the string in search() method
     if(re.search(regex, string)):
