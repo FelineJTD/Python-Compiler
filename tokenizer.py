@@ -5,7 +5,7 @@ def tokenizer(texts):
     # buat dulu regex special case
     special_cases = [r'\=', r'\+', r'\-', r'\*', r'/', r'\%', '(', ')', '[', ']'
                      , '{', '}', r'\#', r'\>', r'\<', r'\>\=', r'\<\=', r'\=\=', r'\!\='
-                     , r'\`\`\`', ':', '\n', '"', r'\*\*']
+                     , r'\`\`\`', ':', '\n', '"',",",".", r'\*\*',"'"]
     # Buat spasi dan tempWord
     spasi = " "
     tempWord = ""
