@@ -60,7 +60,7 @@ with open(nama_file,"r") as f:
 
 # siap kan CFG hingga menjadi CNFdict
 print("translating CFG to CNF...")
-CFGtoCNF("cfgadit.txt")
+CFGtoCNF("cfg.txt")
 print("translating CNF to CNF dictionary...")
 CNFdict = CNFtoCNFdict()
 # for keys in CNFdict.keys():
