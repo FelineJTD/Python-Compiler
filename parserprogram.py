@@ -46,6 +46,7 @@ print("berhasil melakukan translasi menjadi CNFdict")
 listDataLine = data.split("\n")
 baris = 0
 prevIsS = False
+mustFollowedByS = True
 for eachListDataLine in listDataLine:
     baris += 1
     # bersihkan tabulasi dan spasi
@@ -69,9 +70,7 @@ for eachListDataLine in listDataLine:
         for eachTopCNF in listTopCNF:
             if eachTopCNF == 'S':
                 adaS = True
-                prevIsS = True
-                print("prevIsS")
-                print(prevIsS)
+                mustFollowedByS = False
                 break
             else:
                 for eachReservedNonTerminal in listReservedNonTerminal:
@@ -99,49 +98,61 @@ for eachListDataLine in listDataLine:
         if(isSpecial and not(adaS)):
             # kalo nge append, yang aku append cuman yg special. ini bakal trouble kalo suatu statement bisa menjadi 2 spesial yang berbeda(misal dia IF statement sekaligus ELSE, tapi dia bukan S), tapi keknya gk mungkin. jadi harusnya aman 
             print("specialNonTerminal = ", specialNonTerminal)
-            # ['IF', 'ELSE', 'ELIF', 'DEF', 'CLASS', 'FOR', 'WHILE', 'BREAK', 'PASS', 'CONTINUE', 'RETURN', 'TRIPLEDOUBLEQUOTEOPEN','TRIPLEDOUBLEQUOTECLOSE', 'TRIPLESINGLEQUOTEOPEN', 'TIPLESINGLEQUOTECLOSE']
             if specialNonTerminal == 'IF':
+                mustFollowedByS = True
                 stack.append(specialNonTerminal)
             elif specialNonTerminal == 'ELSE':
-                if (len(stack) != 0 and stack[-1] == 'IF' and prevIsS): # stack[-1] artinya top of stack.
+                if mustFollowedByS:
+                    isValid = False
+                if (len(stack) != 0 and stack[-1] == 'IF'): # stack[-1] artinya top of stack.
                     stack.pop()
                 else:
                     # print("ada else tapi atasnya bukan if")
                     isValid = False
                 prevIsS = False
             elif specialNonTerminal == 'ELIF':
+                if mustFollowedByS:
+                    isValid = False
                 if not(len(stack) != 0 and stack[-1] == 'IF'): # stack[-1] artinya top of stack.
                     print("ada elif tanpa if")
                     isValid = False
                 prevIsS = False
             elif specialNonTerminal == 'DEF':
+                mustFollowedByS = True
                 stack.append(specialNonTerminal)
                 prevIsS = False
             elif specialNonTerminal == 'CLASS':
+                mustFollowedByS = True
                 stack.append(specialNonTerminal)
                 prevIsS = False
             elif specialNonTerminal == 'FOR':
+                mustFollowedByS = True
                 stack.append(specialNonTerminal)
                 prevIsS = False
             elif specialNonTerminal == 'WHILE':
+                mustFollowedByS = True
                 stack.append(specialNonTerminal)
                 prevIsS = False
             elif specialNonTerminal == 'BREAK':
+                mustFollowedByS = False
                 prevIsS = True
                 if (len(stack) != 0 and (stack[-1] == 'FOR' or stack[-1] == 'WHILE')):
                     stack.pop()
                 else:
                     isValid = False
             elif specialNonTerminal == 'PASS':
+                mustFollowedByS = False
                 prevIsS = True
                 if (len(stack) != 0 and (stack[-1] == 'FOR' or stack[-1] == 'WHILE')):
                     stack.pop()
                 else:
                     isValid = False
             elif specialNonTerminal == 'CONTINUE':
+                mustFollowedByS = False
                 prevIsS = True
                 pass
             elif specialNonTerminal == 'RETURN':
+                mustFollowedByS = False
                 prevIsS = True
                 if (len(stack) != 0 and stack[-1] == 'DEF'):
                     stack.pop()
@@ -174,7 +185,7 @@ for eachListDataLine in listDataLine:
         if not(isValid):
             break
 # checking tiap line selesai. 
-
+print("==============================")
 if not(isValid):
     print("\n!!!!! NOT VALID !!!!!\n")
     print("baris yang dicurigai")
@@ -182,17 +193,24 @@ if not(isValid):
 print("KONDISI STACK DIAKHIR PROGRAM")
 print(stack)
 # bersihin stack, ada keyword yang gk perlu penutup (contoh IF)
-# while stack:
-#     if stack[-1] == 'IF':
-#         stack.pop()
-#     # if2 lainnya
+while stack:
+    prevStack = stack
+    if stack[-1] == 'IF':
+        stack.pop()
+    if stack[-1] == 'DEF':
+        stack.pop()
+    # kalau sudah gada perubahan di stack
+    if prevStack == stack: 
+        break
+    # if2 lainnya
     
-
+print("KONDISI STACK STELAH DIBERSIHKAN")
+print(stack)
 
 # Stack harus kosong. kalau gk kosong berarti gk valid
-# if isValid:
-#     if stack: # jika semua line aman, tapi stack masih ada isinya
-#         print("stack tidak kosong.")
-#         print("ada ", stack[-1], "tanpa penutup")
-#     else:
-#         print("yay valid")
+if isValid:
+    if stack: # jika semua line aman, tapi stack masih ada isinya
+        print("stack tidak kosong.")
+        print("ada ", stack[-1], "tanpa penutup")
+    else:
+        print("\n!!!!! yay valid !!!!!!\n")

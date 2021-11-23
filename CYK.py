@@ -66,9 +66,9 @@ def CYK(word, Rules):
         # print("baris ke - ", i)
         # print(TabelCYK[i])
     # print("-=====================-")
-    for eachrow in TabelCYK:
-        print(eachrow)
-    print("n-1 = ",n-1)
+    # for eachrow in TabelCYK:
+    #     print(eachrow)
+    # print("n-1 = ",n-1)
     return TabelCYK[0][n-1]
 
 # Contoh pemakaian

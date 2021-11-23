@@ -6,17 +6,19 @@ from FA import isVarValid
 
 
 import re
-def isString(kata):
-    matched = re.match(r'[\x00-\x7F]*', kata)
-    return bool(matched)
+# def isString(kata):
+    # matched = re.match(r'[\x00-\x7F]*', kata)
+    # return bool(matched)
     
-def isNumber(angka):
-    matched = re.match('^[0-9]+$', angka)
-    return bool(matched)
+# def isNumber(angka):
+#     matched = re.match('^[0-9]+$', angka)
+#     return bool(matched)
 
-
+testing = "tes"
+testing = 'tes'
 regex = '^[0-9]+$'
-     
+print(check.y())
+
 # Define a function for
 # identifying a Digit
 def check(string):
