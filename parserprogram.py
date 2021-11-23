@@ -9,6 +9,7 @@ Alur umum dari program yang akan dibangun adalah sebagai berikut.
     5. (BONUS) Memberi tahu letak dan detail kesalahan syntax jika ada 
 '''
 
+from os import truncate
 import sys
 from CFGtoCNF import CFGtoCNF
 from CNFtoCNFdict import CNFtoCNFdict
@@ -17,9 +18,42 @@ from FA import isVarValid
 from tokenizer import tokenizer
 
 # KAMUS
-listReservedNonTerminal = ['IF', 'ELSE', 'ELIF', 'DEF', 'CLASS', 'FOR', 'WHILE', 'BREAK', 'PASS', 'CONTINUE', 'RETURN', 'TRIPLEDOUBLEQUOTEOPEN','TRIPLEDOUBLEQUOTECLOSE', 'TRIPLESINGLEQUOTEOPEN', 'TIPLESINGLEQUOTECLOSE']
+listReservedNonTerminal = ['IF', 'ELSE', 'ELIF', 'DEF', 'CLASS', 'FOR', 'WHILE', 'BREAK', 'PASS', 'CONTINUE', 'RETURN', 'TRIPLEDOUBLEQUOTEOPEN','TRIPLEDOUBLEQUOTECLOSE', 'TRIPLESINGLEQUOTEOPEN', 'TIPLESINGLEQUOTECLOSE', 'WITH']
 stack = []
 isValid = True
+
+
+def cleanTanpaTutup(stack):
+    while True:
+        lenprev = len(stack)
+        if stack[-1][0] == 'IF':
+            stack.pop()
+        elif stack[-1][0] == 'FOR':
+            stack.pop()
+        elif stack[-1][0] == 'WHILE':
+            stack.pop()
+        elif stack[-1][0] == 'WITH':
+            stack.pop()
+        # kalau sudah gada perubahan di stack
+        if lenprev == len(stack) or len(stack) == 0 : 
+            break
+    return stack
+def cleanIf(stack):
+    print("stack masuk")
+    print(stack)
+    while(True):
+        # print("stack")
+        # print(stack)
+        lenprev = len(stack)
+        if stack[-1][0] == 'IF':
+            # print("pop")
+            stack.pop()
+        # kalau sudah gada perubahan di stack
+        if lenprev == len(stack) or len(stack) == 0 : 
+            break
+    print("stack keluar")
+    print(stack)
+    return stack
 # ALGORITMA
 
 '''1. Menerima input berupa file eksternal berisi string yang merupakan kode sebuah program python'''
@@ -45,7 +79,6 @@ print("CNFdict")
 print("berhasil melakukan translasi menjadi CNFdict")
 listDataLine = data.split("\n")
 baris = 0
-prevIsS = False
 mustFollowedByS = True
 for eachListDataLine in listDataLine:
     baris += 1
@@ -58,7 +91,6 @@ for eachListDataLine in listDataLine:
         print("===========================")
         print("BARIS ",baris)
         print('tokenized = ',tokenizedLine)
-        print('prev is S = ', prevIsS)
         listTopCNF = CYK(tokenizedLine,CNFdict)
 
         # kalau di dalam listTopCNF itu gada S dan ada ReservedNonTerminal, brarti perlu tindakan khusus dengan stack
@@ -68,7 +100,8 @@ for eachListDataLine in listDataLine:
         # untuk mencatat apakkah sebelumnya sudah ada Statement. untuk menghandle 'if diikuti else tapi belom ada statement, atau def tanpa statement
         print("listTopCNF = ", listTopCNF)
         for eachTopCNF in listTopCNF:
-            if eachTopCNF == 'S':
+            if "S" in listTopCNF:
+                print('ADA S')
                 adaS = True
                 mustFollowedByS = False
                 break
@@ -79,12 +112,24 @@ for eachListDataLine in listDataLine:
                     if eachTopCNF == eachReservedNonTerminal:
                         # kasus khusus, hopefully doesnt kick my ass later
                         if 'TRIPLEDOUBLEQUOTECLOSE' in listTopCNF:
-                            if 'TRIPLEDOUBLEQUOTEOPEN' in stack:
+                            print("stack mau di close")
+                            print(stack)
+                            exist = False
+                            for element in stack:
+                                if element[0] == 'TRIPLEDOUBLEQUOTEOPEN':
+                                    exist = True
+                                    break
+                            if exist:
                                 specialNonTerminal = 'TRIPLEDOUBLEQUOTECLOSE'
                             else:
                                 specialNonTerminal = 'TRIPLEDOUBLEQUOTECOPEN'
                         elif 'TRIPLESINGLEQUOTECLOSE' in listTopCNF:
-                            if 'TRIPLESINGLEQUOTEOPEN' in stack:
+                            exist = False
+                            for element in stack:
+                                if element[0] == 'TRIPLESINGLEQUOTEOPEN':
+                                    exist = True
+                                    break
+                            if exist:
                                 specialNonTerminal = 'TRIPLESINGLEQUOTECLOSE'
                             else:
                                 specialNonTerminal = 'TRIPLESINGLEQUOTEOPEN'
@@ -100,80 +145,110 @@ for eachListDataLine in listDataLine:
             print("specialNonTerminal = ", specialNonTerminal)
             if specialNonTerminal == 'IF':
                 mustFollowedByS = True
-                stack.append(specialNonTerminal)
+                stack.append((specialNonTerminal,baris))
             elif specialNonTerminal == 'ELSE':
                 if mustFollowedByS:
                     isValid = False
-                if (len(stack) != 0 and stack[-1] == 'IF'): # stack[-1] artinya top of stack.
+                if (len(stack) != 0 and stack[-1][0] == 'IF'): # stack[-1][0] artinya top of stack.
                     stack.pop()
                 else:
                     # print("ada else tapi atasnya bukan if")
                     isValid = False
-                prevIsS = False
+               
             elif specialNonTerminal == 'ELIF':
                 if mustFollowedByS:
                     isValid = False
-                if not(len(stack) != 0 and stack[-1] == 'IF'): # stack[-1] artinya top of stack.
+                if not(len(stack) != 0 and stack[-1][0] == 'IF'): # stack[-1][0] artinya top of stack.
                     print("ada elif tanpa if")
                     isValid = False
-                prevIsS = False
+              
             elif specialNonTerminal == 'DEF':
                 mustFollowedByS = True
-                stack.append(specialNonTerminal)
-                prevIsS = False
+                stack.append((specialNonTerminal,baris))
+               
             elif specialNonTerminal == 'CLASS':
                 mustFollowedByS = True
-                stack.append(specialNonTerminal)
-                prevIsS = False
+                stack.append((specialNonTerminal,baris))
+                
             elif specialNonTerminal == 'FOR':
                 mustFollowedByS = True
-                stack.append(specialNonTerminal)
-                prevIsS = False
+                stack.append((specialNonTerminal,baris))
+               
             elif specialNonTerminal == 'WHILE':
                 mustFollowedByS = True
-                stack.append(specialNonTerminal)
-                prevIsS = False
+                stack.append((specialNonTerminal,baris))
+              
             elif specialNonTerminal == 'BREAK':
+                print("BREAAAAK")
                 mustFollowedByS = False
-                prevIsS = True
-                if (len(stack) != 0 and (stack[-1] == 'FOR' or stack[-1] == 'WHILE')):
+                exist = False
+                for element in stack:
+                    if element[0] == 'FOR' or element[0] == 'WHILE':
+                        exist = True
+                        break
+                    # ada di paling atas
+                if (len(stack) != 0 and (stack[-1][0] == 'FOR' or stack[-1][0] == 'WHILE')):
                     stack.pop()
-                else:
-                    isValid = False
+                    # bukan paling atas
+                elif(len(stack) != 0 and exist):
+                    print("perlu di clean")
+                    stack = cleanIf(stack)
+                    if not(stack[-1][0] == 'FOR' or stack[-1][0] == 'WHILE'):
+                        print("kena disini2")
+                        isValid = False
+                    else:
+                        stack.pop()
+
             elif specialNonTerminal == 'PASS':
                 mustFollowedByS = False
-                prevIsS = True
-                if (len(stack) != 0 and (stack[-1] == 'FOR' or stack[-1] == 'WHILE')):
+                
+                if (len(stack) != 0 and (stack[-1][0] == 'FOR' or stack[-1][0] == 'WHILE' or stack[-1][0] == 'DEF' or stack[-1][0] == 'CLASS')):
                     stack.pop()
                 else:
                     isValid = False
             elif specialNonTerminal == 'CONTINUE':
                 mustFollowedByS = False
-                prevIsS = True
-                pass
+                
+               
             elif specialNonTerminal == 'RETURN':
                 mustFollowedByS = False
-                prevIsS = True
-                if (len(stack) != 0 and stack[-1] == 'DEF'):
+               
+                # cari def
+                exist = False
+                for element in stack:
+                    if element[0] == 'DEF':
+                        exist = True
+                        break
+                    # yg paling atas
+                if (len(stack) != 0 and stack[-1][0] == 'DEF'):
                     stack.pop()
-                elif(len(stack) != 0 and 'DEF' in stack):
-                    pass
+                    # bukan paling atas
+                elif(len(stack) != 0 and exist):
+                    stack = cleanTanpaTutup(stack)
+                    if stack[-1][0] != 'DEF':
+                        isValid = False
+                    else:
+                        stack.pop()
                 else:
                     isValid = False
             elif specialNonTerminal == 'TRIPLEDOUBLEQUOTECLOSE':
-                if (len(stack) != 0 and stack[-1] == 'TRIPLEDOUBLEQUOTEOPEN'):
+                if (len(stack) != 0 and stack[-1][0] == 'TRIPLEDOUBLEQUOTEOPEN'):
                     stack.pop()
                 else:
                     isValid = False
             elif specialNonTerminal == 'TRIPLEDOUBLEQUOTEOPEN':
-                stack.append(specialNonTerminal)
+                stack.append((specialNonTerminal,baris))
             elif specialNonTerminal == 'TRIPLESINGLEQUOTECLOSE':
-                if (len(stack) != 0 and stack[-1] == 'TRIPLESINGLEQUOTEOPEN'):
+                if (len(stack) != 0 and stack[-1][0] == 'TRIPLESINGLEQUOTEOPEN'):
                     stack.pop()
                 else:
                     isValid = False
             elif specialNonTerminal == 'TRIPLESINGLEQUOTEOPEN':
-                stack.append(specialNonTerminal)
+                stack.append((specialNonTerminal,baris))
+            elif specialNonTerminal == 'WITH':
+                stack.append((specialNonTerminal,baris))
+                mustFollowedByS = True
+                
                 
         elif 'TRIPLESINGLEQUOTEOPEN' in stack or 'TRIPLEDOUBLEQUOTEOPEN' in stack:
             continue    
@@ -190,31 +265,48 @@ if not(isValid):
     print("\n!!!!! NOT VALID !!!!!\n")
     print("baris yang dicurigai")
     print(eachListDataLine)
-print("KONDISI STACK")
-print(stack)
-# bersihin stack, ada keyword yang gk perlu penutup (contoh IF)
-while stack:
-    prevStack = stack
-    if stack[-1] == 'IF' and prevIsS:
-        stack.pop()
-    if stack[-1] == 'DEF' and prevIsS:
-        stack.pop()
-    if stack[-1] == 'FOR' and prevIsS:
-        stack.pop()
-    if stack[-1] == 'WHILE' and prevIsS:
-        stack.pop()
-    # kalau sudah gada perubahan di stack
-    if prevStack == stack: 
-        break
-    # if2 lainnya
+    print("KONDISI STACK")
+    for element in stack:
+        print("{} (baris {})".format(element[0], element[1]))
     
 
 # Stack harus kosong. kalau gk kosong berarti gk valid
-if isValid:
-    print("KONDISI STACK STELAH DIBERSIHKAN")
-    print(stack)
-    if stack: # jika semua line aman, tapi stack masih ada isinya
-        print("stack tidak kosong.")
-        print("ada ", stack[-1], "tanpa penutup")
+elif isValid:
+    if mustFollowedByS:
+        print("kurang statement dibagian akhir")
     else:
-        print("\n!!!!! yay valid !!!!!!\n")
+        # bersihin stack, ada keyword yang gk perlu penutup (contoh IF)
+        # print("mustFollowedByS")
+        # print(mustFollowedByS)
+        while True:
+            lenprev = (len(stack))
+            if stack[-1][0] == 'IF' and not(mustFollowedByS):
+                # print("pop if")
+                stack.pop()
+            elif stack[-1][0] == 'DEF' and not(mustFollowedByS):
+                # print("pop def")
+                stack.pop()
+            elif stack[-1][0] == 'FOR' and not(mustFollowedByS):
+                # print("pop for")
+                stack.pop()
+            elif stack[-1][0] == 'WHILE' and not(mustFollowedByS):
+                # print("pop while")
+                stack.pop()
+            elif stack[-1][0] == 'CLASS' and not(mustFollowedByS):
+                # print("pop CLASS")
+                stack.pop()
+            elif stack[-1][0] == 'WITH' and not(mustFollowedByS):
+                # print("pop CLASS")
+                stack.pop()
+            # kalau sudah gada perubahan di stack
+
+            if lenprev == len(stack) or len(stack) == 0: 
+                break
+            # if2 lainnya
+        print("KONDISI STACK STELAH DIBERSIHKAN")
+        print(stack)
+        if stack: # jika semua line aman, tapi stack masih ada isinya
+            print("stack tidak kosong.")
+            print("ada ", stack[-1][0], "tanpa penutup")
+        else:
+            print("\n!!!!! yay valid !!!!!!\n")
