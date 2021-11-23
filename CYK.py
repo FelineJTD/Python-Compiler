@@ -34,10 +34,13 @@ def CYK(word, Rules):
             # print("word[i]")
             # print(word[i])
         if(isString(word[i])):
+            print(word[i],"string")
             TabelCYK[i][i].update(Rules['string'])
         if(isNumber(word[i])):
+            print(word[i],"angka")
             TabelCYK[i][i].update(Rules['angka'])
         if(isVarValid(word[i])):
+            print(word[i],"variable")
             TabelCYK[i][i].update(Rules['variable'])
         # print(TabelCYK[i][i])
             
@@ -63,9 +66,9 @@ def CYK(word, Rules):
         # print("baris ke - ", i)
         # print(TabelCYK[i])
     # print("-=====================-")
-    # for eachrow in TabelCYK:
-    #     print(eachrow)
-    # print("n-1 = ",n-1)
+    for eachrow in TabelCYK:
+        print(eachrow)
+    print("n-1 = ",n-1)
     return TabelCYK[0][n-1]
 
 # Contoh pemakaian
