@@ -14,35 +14,26 @@ def isNumber(angka):
     return bool(matched)
 
 def CYK(word, Rules):
-    # print("word dari tokenizer")
-    # print(word)
     # Dari referensi geeks for geeks
     # Untuk ukuran tabel CYK
     n = len(word)
-    # print("n")
-    # print(n)
     # Inisialisasi tabel CYK
     TabelCYK = [[set([]) for j in range(n)] for i in range(n)]
     # Isi tabel diagonal dulu, disini i sebagai kolom dan j sebagai baris
     for i in range(n):
-        # print("word[i]")
-        # print(word[i])
         # Kita append ke TabelCYK[i][i]
         if word[i] in Rules.keys():
             TabelCYK[i][i].update(Rules[word[i]])
-        
-            # print("word[i]")
-            # print(word[i])
         if(isString(word[i])):
-            # print(word[i],"string")
+    
             TabelCYK[i][i].update(Rules['string'])
         if(isNumber(word[i])):
-            # print(word[i],"angka")
+          
             TabelCYK[i][i].update(Rules['angka'])
         if(isVarValid(word[i])):
-            # print(word[i],"variable")
+       
             TabelCYK[i][i].update(Rules['variable'])
-        # print(TabelCYK[i][i])
+    
             
         # Kalo i > 0 baru cek pohon bawah nya
         if i > 0:
@@ -70,19 +61,3 @@ def CYK(word, Rules):
     #     print(eachrow)
     # print("n-1 = ",n-1)
     return TabelCYK[0][n-1]
-
-# Contoh pemakaian
-# Rule = CNFtoCNFdict()
-# print(Rule)
-# # print("a" in Rule.keys())
-# tabel = CYK("aa*(aa+aa)", Rule)
-# for row in tabel:
-#     print(row, end="\n")
-# for a in tabel[0][0]:
-#     for b in tabel[1][1]:
-#         print(a)
-# print(CYK("makanan bakso", {"S" : "a"}))
-# elemen set di python engga bisa subscript tp iterable
-# set1 = [set([]) for i in range(10)]
-# set1[0].add(1)
-# print(set1)
